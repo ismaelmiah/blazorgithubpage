@@ -26,12 +26,6 @@ jobs:
           dotnet build --configuration Release
           dotnet publish --configuration Release --output publish
 
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-          create-branch: true
-
       - name: Copy files
         run: cp -r ../publish/wwwroot/* .
 
