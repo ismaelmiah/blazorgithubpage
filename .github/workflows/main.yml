@@ -21,6 +21,17 @@ jobs:
     - name: Publish .NET Core Project
       run: dotnet publish BlazorGitHubPagesDemo.csproj -c Release -o release --nologo
     
+    - name: Checkout gh-pages branch
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        create-branch: true
+
+    - name: Copy files
+      run: |
+        rm -rf *
+        cp -r ../release/wwwroot/* .
+
     # changes the base-tag in index.html from '/' to 'BlazorGitHubPagesDemo' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
       run: sed -i 's/<base href="\/" \/>/<base href="\/blazorgithubpage\/" \/>/g' release/wwwroot/index.html
@@ -32,10 +43,11 @@ jobs:
     # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
     - name: Add .nojekyll file
       run: touch release/wwwroot/.nojekyll
-      
-    - name: Commit wwwroot to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: release/wwwroot
+  
+    - name: Commit and Push changes
+      run: |
+        git config user.name "Your Name"
+        git config user.email "youremail@example.com"
+        git add .
+        git commit -m "Publish to gh-pages branch"
+        git push origin gh-pages
