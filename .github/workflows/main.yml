@@ -18,9 +18,15 @@ jobs:
         dotnet-version: 7.0.200
 
     # publishes Blazor project to the release-folder
-    - name: Publish .NET Core Project
-      run: dotnet publish BlazorGitHubPagesDemo.csproj -c Release -o release --nologo
-    
+    # - name: Publish .NET Core Project
+      # run: dotnet publish BlazorGitHubPagesDemo.csproj -c Release -o release --nologo
+
+  - name: Build and Publish
+      run: |
+        dotnet restore
+        dotnet build BlazorGitHubPagesDemo.csproj --configuration Release
+        dotnet publish BlazorGitHubPagesDemo.csproj --configuration Release --output publish
+
     - name: Checkout gh-pages branch
       uses: actions/checkout@v2
       with:
@@ -28,9 +34,7 @@ jobs:
         create-branch: true
 
     - name: Copy files
-      run: |
-        rm -rf *
-        cp -r ../release/wwwroot/* .
+      run: cp -r ../publish/wwwroot/* .
 
     # changes the base-tag in index.html from '/' to 'BlazorGitHubPagesDemo' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
