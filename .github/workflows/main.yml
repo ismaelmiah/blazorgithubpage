@@ -36,6 +36,6 @@ jobs:
     - name: Commit wwwroot to Github pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
-        GITHUB_TOKEN: ${{ secrets.BLAZOR_STATIC_PORTFOLIO }}
+        GITHUB_TOKEN: ${{ BLAZOR_STATIC_PORTFOLIO }}
         BRANCH: main
         FOLDER: release/wwwroot
